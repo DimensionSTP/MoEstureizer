@@ -1,0 +1,35 @@
+_target_: trl.SFTConfig
+dataset_text_field: null
+dataset_kwargs:
+  skip_prepare_dataset: true
+use_liger_kernel: false
+ddp_find_unused_parameters: true
+packing: false
+max_seq_length: ${max_length}
+output_dir: ${output_dir}
+do_eval: ${use_validation}
+eval_strategy: ${eval_strategy}
+per_device_train_batch_size: ${batch_size}
+per_device_eval_batch_size: ${eval_batch_size}
+dataloader_num_workers: ${workers_ratio}
+dataloader_pin_memory: true
+num_train_epochs: ${epoch}
+bf16: ${is_bf16}
+bf16_full_eval: ${is_bf16}
+fp16_full_eval: false
+report_to: wandb
+remove_unused_columns: false
+gradient_accumulation_steps: ${gradient_accumulation_steps}
+max_grad_norm: ${max_grad_norm}
+optim: ${optim}
+learning_rate: ${lr}
+weight_decay: ${weight_decay}
+lr_scheduler_type: ${scheduler_type}
+warmup_ratio: ${warmup_ratio}
+lr_scheduler_kwargs: {}
+logging_steps: ${logging_steps}
+save_steps: ${step}
+save_strategy: ${save_strategy}
+save_total_limit: ${save_total_limit}
+resume_from_checkpoint: ${resume_from_checkpoint}
+run_name: ${logging_name}

@@ -1,0 +1,42 @@
+train_micro_batch_size_per_gpu: ${batch_size}
+gradient_accumulation_steps: ${gradient_accumulation_steps}
+num_gpus: ${devices}
+bf16:
+  enabled: ${is_bf16}
+zero_optimization:
+  stage: 3
+  offload_optimizer:
+    device: cpu
+    pin_memory: true
+    buffer_count: 4
+    fast_init: false
+  offload_param:
+    device: cpu
+    pin_memory: true
+  contiguous_gradients: true
+  overlap_comm: true
+  reduce_scatter: true
+  reduce_bucket_size: 2e8
+  stage3_prefetch_bucket_size: 2e8
+  stage3_param_persistence_threshold: 1e4
+  stage3_max_live_parameters: 1e8
+  stage3_max_reuse_distance: 1e8
+  stage3_gather_16bit_weights_on_model_save: true
+  sub_group_size: 1e8
+activation_checkpointing:
+  partition_activations: true
+  cpu_checkpointing: true
+  contiguous_memory_optimization: true
+  synchronize_checkpoint_boundary: true
+  profile: false
+gradient_clipping: ${max_grad_norm}
+prescale_gradients: false
+wall_clock_breakdown: false
+memory_breakdown: true
+checkpoint:
+  tag_validation: ignore
+  load_universal: true
+  save_universal: true
+communication_data_type: ${precision}
+save_16bit_model: false
+save_full_weights: false
