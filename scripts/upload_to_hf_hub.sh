@@ -7,8 +7,7 @@ is_preprocessed=False
 strategy="deepspeed"
 upload_user="HuggingFaceTB"
 model_type="SmolLM2-360M-Instruct"
-model_detail="SmolLM2-360M-135M-Instruct"
-upload_tag="merge-up"
+upload_tag="MoEstureized"
 is_quantized=False
 is_peft=False
 max_length=4096
@@ -23,7 +22,6 @@ python $path/upload_to_hf_hub.py \
     strategy=$strategy \
     upload_user=$upload_user \
     model_type=$model_type \
-    model_detail=$model_detail \
     upload_tag=$upload_tag \
     is_quantized=$is_quantized \
     is_peft=$is_peft \
