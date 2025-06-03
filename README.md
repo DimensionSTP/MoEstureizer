@@ -9,8 +9,8 @@ Tulu sampling dataset(preprocessed as instruction, input, and response)
 
 ```bash
 # clone project
-git clone https://github.com/DimensionSTP/merge-up-slm.git
-cd merge-up-slm
+git clone https://github.com/DimensionSTP/MoEstureizer.git
+cd MoEstureizer
 
 # [OPTIONAL] create conda environment
 conda create -n myenv python=3.10 -y
