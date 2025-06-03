@@ -54,9 +54,7 @@ class SetUp:
     def get_model(
         self,
     ) -> Union[
-        MixLlamaForCausalLM,
-        DeepMixLlamaForCausalLM,
-        GatedMixLlamaForCausalLM,
+        MoEsturizedLlamaForCausalLM,
         PreTrainedModel,
     ]:
         device_map = None
@@ -65,42 +63,17 @@ class SetUp:
             device_map = {"": "cuda:" + str(int(os.environ.get("LOCAL_RANK") or 0))}
             quantization_config = BitsAndBytesConfig(**self.config.quantization_config)
 
-        if self.config.mix_type == "mix":
-            model = MixLlamaForCausalLM.from_pretrained(
+        if self.config.moe_type == "moesturized":
+            model = MoEsturizedLlamaForCausalLM.from_pretrained(
                 pretrained_model_name_or_path=self.config.model_path,
                 model_names=self.config.model_names,
                 initialize=self.config.initialize,
-                quantization_config=quantization_config,
-            )
-
-            if hasattr(self.config, "is_frozen_train") and self.config.is_frozen_train:
-                model.freeze_branch_models()
-
-        elif self.config.mix_type == "gated_mix":
-            model = GatedMixLlamaForCausalLM.from_pretrained(
-                pretrained_model_name_or_path=self.config.model_path,
-                model_names=self.config.model_names,
-                initialize=self.config.initialize,
+                num_experts=self.config.num_experts,
+                num_experts_per_tok=self.config.num_experts_per_tok,
+                norm_topk_prob=self.config.norm_topk_prob,
                 router_aux_loss_coef=self.config.router_aux_loss_coef,
                 quantization_config=quantization_config,
             )
-
-            if hasattr(self.config, "is_frozen_train") and self.config.is_frozen_train:
-                model.freeze_branch_models()
-
-        elif self.config.mix_type == "deep_mix":
-            model = DeepMixLlamaForCausalLM.from_pretrained(
-                pretrained_model_name_or_path=self.config.model_path,
-                model_names=self.config.model_names,
-                initialize=self.config.initialize,
-                mix_interval=self.config.mix_interval,
-                quantization_config=quantization_config,
-            )
-
-            if hasattr(self.config, "is_frozen_train") and self.config.is_frozen_train:
-                if hasattr(model, "freeze_branch_models"):
-                    model.freeze_branch_models()
-
         else:
             model = AutoModelForCausalLM.from_pretrained(
                 pretrained_model_name_or_path=self.config.pretrained_model_name,
