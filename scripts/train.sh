@@ -1,12 +1,5 @@
 #!/bin/bash
 
-models=(
-    "HuggingFaceTB/SmolLM2-360M-Instruct"
-    "HuggingFaceTB/SmolLM2-135M-Instruct"
-)
-
-IFS=, ; model_names="[${models[*]}]" ; unset IFS
-
 data_type="conversational"
 split_ratio=1e-2
 is_strict_split=True
@@ -18,7 +11,6 @@ upload_user="HuggingFaceTB"
 model_type="SmolLM2-360M-Instruct"
 left_padding=False
 is_enable_thinking=False
-model_detail="SmolLM2-360M-135M-Instruct"
 initialize=True
 is_frozen_train=False
 mix_type="mix"
@@ -50,8 +42,6 @@ if [ "$strategy" = "deepspeed" ]; then
         model_type=$model_type \
         left_padding=$left_padding \
         is_enable_thinking=$is_enable_thinking \
-        model_names="$model_names" \
-        model_detail=$model_detail \
         initialize=$initialize \
         is_frozen_train=$is_frozen_train \
         mix_type=$mix_type \
@@ -82,8 +72,6 @@ else
         model_type=$model_type \
         left_padding=$left_padding \
         is_enable_thinking=$is_enable_thinking \
-        model_names="$model_names" \
-        model_detail=$model_detail \
         initialize=$initialize \
         is_frozen_train=$is_frozen_train \
         mix_type=$mix_type \
