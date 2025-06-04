@@ -130,7 +130,10 @@ class MoEsturizedLlamaDecoderLayer(LlamaDecoderLayer):
             config=config,
             layer_idx=layer_idx,
         )
+
         self.mlp = LlamaSparseMoeBlock(config=config)
+
+        self.config = config
 
     def forward(
         self,
@@ -171,6 +174,16 @@ class MoEsturizedLlamaDecoderLayer(LlamaDecoderLayer):
                 Arbitrary kwargs to be ignored, used for FSDP and other methods that injects code
                 into the model
         """
+
+        output_router_logits = (
+            output_router_logits
+            if output_router_logits is not None
+            else getattr(
+                self.config,
+                "output_router_logits",
+                False,
+            )
+        )
 
         residual = hidden_states
 
@@ -216,6 +229,7 @@ class MoEsturizedLlamaModel(LlamaModel):
         config: LlamaConfig,
     ) -> None:
         super().__init__(config=config)
+
         for i in range(len(self.layers)):
             self.layers[i] = MoEsturizedLlamaDecoderLayer(
                 config=config,
@@ -242,15 +256,19 @@ class MoEsturizedLlamaModel(LlamaModel):
             if output_attentions is not None
             else self.config.output_attentions
         )
-        output_router_logits = (
-            output_router_logits
-            if output_router_logits is not None
-            else self.config.output_router_logits
-        )
         output_hidden_states = (
             output_hidden_states
             if output_hidden_states is not None
             else self.config.output_hidden_states
+        )
+        output_router_logits = (
+            output_router_logits
+            if output_router_logits is not None
+            else getattr(
+                self.config,
+                "output_router_logits",
+                False,
+            )
         )
         use_cache = use_cache if use_cache is not None else self.config.use_cache
 
@@ -499,16 +517,19 @@ class MoEsturizedLlamaForCausalLM(LlamaForCausalLM, GenerationMixin):
             if output_attentions is not None
             else self.config.output_attentions
         )
-        output_router_logits = (
-            output_router_logits
-            if output_router_logits is not None
-            else self.config.output_router_logits
-        )
-
         output_hidden_states = (
             output_hidden_states
             if output_hidden_states is not None
             else self.config.output_hidden_states
+        )
+        output_router_logits = (
+            output_router_logits
+            if output_router_logits is not None
+            else getattr(
+                self.config,
+                "output_router_logits",
+                False,
+            )
         )
 
         outputs: MoeModelOutputWithPast = self.model(
