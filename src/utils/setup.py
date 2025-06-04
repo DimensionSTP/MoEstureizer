@@ -65,8 +65,7 @@ class SetUp:
 
         if self.config.moe_type == "moesturized":
             model = MoEsturizedLlamaForCausalLM.from_pretrained(
-                pretrained_model_name_or_path=self.config.model_path,
-                model_names=self.config.model_names,
+                pretrained_model_name_or_path=self.config.pretrained_model_name,
                 initialize=self.config.initialize,
                 num_experts=self.config.num_experts,
                 num_experts_per_tok=self.config.num_experts_per_tok,
@@ -90,11 +89,6 @@ class SetUp:
         if self.config.is_peft:
             peft_config = LoraConfig(**self.config.peft_config)
             model = get_peft_model(model, peft_config)
-
-        if self.config.gradient_checkpointing and self.config.mix_type != "deep_mix":
-            model.gradient_checkpointing_enable(
-                gradient_checkpointing_kwargs=self.config.gradient_checkpointing_kwargs,
-            )
 
         return model
 
