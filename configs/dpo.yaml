@@ -103,7 +103,7 @@ mode: train
 project_name: ${model_name}-${dataset_name}-${mode}
 total_batch_size: bs=${batch_size}x${devices}x${gradient_accumulation_steps}
 length_info: max_length=${max_length}
-save_detail: ${model_detail}-is_sft=${is_sft}-is_quantized=${is_quantized}-is_peft=${is_peft}-is_frozen=${is_frozen_train}-${length_info}-${total_batch_size}
+save_detail: ${model_detail}-is_sft=${is_sft}-is_quantized=${is_quantized}-is_peft=${is_peft}-${length_info}-${total_batch_size}
 logging_name: ${save_detail}-lr${lr}
 
 output_dir: ${connected_dir}/checkpoints/${model_name}/${dataset_name}/${strategy}/${moe_type}/${save_detail}
