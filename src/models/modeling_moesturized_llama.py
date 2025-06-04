@@ -43,6 +43,7 @@ class LlamaSparseMoeBlock(nn.Module):
         config: LlamaConfig,
     ) -> None:
         super().__init__()
+
         self.num_experts = config.num_experts
         self.top_k = config.num_experts_per_tok
         self.norm_topk_prob = config.norm_topk_prob
@@ -131,9 +132,9 @@ class MoEsturizedLlamaDecoderLayer(LlamaDecoderLayer):
             layer_idx=layer_idx,
         )
 
-        self.mlp = LlamaSparseMoeBlock(config=config)
-
         self.config = config
+
+        self.mlp = LlamaSparseMoeBlock(config=config)
 
     def forward(
         self,
@@ -488,12 +489,12 @@ class MoEsturizedLlamaForCausalLM(LlamaForCausalLM, GenerationMixin):
         super().__init__(config=config)
         self.post_init()
 
-        self.model = MoEsturizedLlamaModel(config=config)
-
         self.num_experts = config.num_experts
         self.num_experts_per_tok = config.num_experts_per_tok
         self.norm_topk_prob = config.norm_topk_prob
         self.router_aux_loss_coef = config.router_aux_loss_coef
+
+        self.model = MoEsturizedLlamaModel(config=config)
 
     @can_return_tuple
     def forward(
@@ -654,7 +655,6 @@ class MoEsturizedLlamaForCausalLM(LlamaForCausalLM, GenerationMixin):
                 strict=False,
             )
 
-            layers = len(moe_model.model.layers)
             for i, layer in enumerate(moe_model.model.layers):
                 if isinstance(layer.mlp, LlamaSparseMoeBlock):
                     original_mlp = base_model.model.layers[i].mlp
