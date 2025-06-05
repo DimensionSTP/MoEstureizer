@@ -102,8 +102,11 @@ class SetUp:
             model = prepare_model_for_kbit_training(model)
 
         if self.config.is_peft:
-            peft_config = LoraConfig(**self.config.peft_config)
-            model = get_peft_model(model, peft_config)
+            if self.config.moe_type == "moesturized" and self.config.selective_peft:
+                model = self._apply_selective_peft(model)
+            else:
+                peft_config = LoraConfig(**self.config.peft_config)
+                model = get_peft_model(model, peft_config)
 
         return model
 
