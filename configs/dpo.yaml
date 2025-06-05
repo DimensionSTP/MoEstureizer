@@ -69,6 +69,7 @@ quantization_config:
   bnb_4bit_use_double_quant: true
   bnb_4bit_compute_dtype: bfloat16
 is_peft: false
+selective_peft: false
 peft_config:
   r: 64
   lora_alpha: 16
