@@ -107,6 +107,54 @@ class SetUp:
 
         return model
 
+    def _apply_selective_peft(
+        self,
+        model: MoEsturizedLlamaForCausalLM,
+    ) -> MoEsturizedLlamaForCausalLM:
+        router_gate_params = []
+        for name, param in model.named_parameters():
+            if (
+                "gate" in name
+                and "gate_proj" not in name
+                and "gate_up_proj" not in name
+                and "mlp" not in name
+            ):
+                router_gate_params.append(name)
+                param.requires_grad = True
+
+        peft_config = LoraConfig(**self.config.peft_config)
+
+        if peft_config.target_modules == "all-linear":
+            target_modules = [
+                "q_proj",
+                "k_proj",
+                "v_proj",
+                "o_proj",
+                "gate_proj",
+                "up_proj",
+                "down_proj",
+            ]
+        else:
+            target_modules = []
+            for module in peft_config.target_modules:
+                if not (module in ["gate"] or "router" in module.lower()):
+                    target_modules.append(module)
+
+        peft_config.target_modules = target_modules
+
+        model = get_peft_model(model, peft_config)
+
+        for name, param in model.named_parameters():
+            if (
+                "gate" in name
+                and "gate_proj" not in name
+                and "gate_up_proj" not in name
+                and "mlp" not in name
+            ):
+                param.requires_grad = True
+
+        return model
+
     def get_data_encoder(self) -> PreTrainedTokenizer:
         data_encoder = AutoTokenizer.from_pretrained(
             self.config.pretrained_model_name,
