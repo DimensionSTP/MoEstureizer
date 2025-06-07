@@ -44,6 +44,8 @@ def main(
 ) -> None:
     if config.mode == "train":
         return train(config)
+    elif config.mode == "test":
+        return test(config)
     else:
         raise ValueError(f"Invalid execution mode: {config.mode}")
 
