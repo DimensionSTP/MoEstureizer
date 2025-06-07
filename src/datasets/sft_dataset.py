@@ -28,8 +28,6 @@ class StructuralDataset(Dataset):
         role_column_name: str,
         content_column_name: str,
         assistant_column_name: str,
-        num_devices: int,
-        batch_size: int,
         pretrained_model_name: str,
         custom_data_encoder_path: str,
         reference_data_encoder_name: str,
@@ -52,8 +50,6 @@ class StructuralDataset(Dataset):
         self.role_column_name = role_column_name
         self.content_column_name = content_column_name
         self.assistant_column_name = assistant_column_name
-        self.num_devices = num_devices
-        self.batch_size = batch_size
         self.pretrained_model_name = pretrained_model_name
 
         if is_preprocessed:
@@ -276,8 +272,6 @@ class ConversationalDataset(StructuralDataset):
         role_column_name: str,
         content_column_name: str,
         assistant_column_name: str,
-        num_devices: int,
-        batch_size: int,
         pretrained_model_name: str,
         custom_data_encoder_path: str,
         reference_data_encoder_name: str,
@@ -298,8 +292,6 @@ class ConversationalDataset(StructuralDataset):
         self.role_column_name = role_column_name
         self.content_column_name = content_column_name
         self.assistant_column_name = assistant_column_name
-        self.num_devices = num_devices
-        self.batch_size = batch_size
         self.pretrained_model_name = pretrained_model_name
 
         if is_preprocessed:
