@@ -6,7 +6,7 @@ from omegaconf import DictConfig, OmegaConf
 from hydra.utils import instantiate
 
 import torch
-from torch.utils.data import Dataset
+from torch.utils.data import Dataset, DataLoader
 
 from transformers import (
     AutoTokenizer,
@@ -60,6 +60,18 @@ class SetUp:
             split=self.config.split.val,
         )
         return val_dataset
+
+    def get_test_loader(self) -> DataLoader:
+        test_dataset: Dataset = instantiate(
+            self.config.test_dataset[self.data_type],
+        )
+        return DataLoader(
+            dataset=test_dataset,
+            batch_size=self.config.eval_batch_size,
+            shuffle=False,
+            num_workers=self.num_workers,
+            pin_memory=True,
+        )
 
     def get_model(self) -> Union[
         MoEsturizedLlamaForCausalLM,
