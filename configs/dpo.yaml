@@ -4,6 +4,7 @@ defaults:
   - training_arguments: dpo_config
   - trainer: dpo_trainer
   - deepspeed: ds_config
+  - test_dataset: test_dataset
   - hydra: hydra
 
 package_name: MoEstureizer
