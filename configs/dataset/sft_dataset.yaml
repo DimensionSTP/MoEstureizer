@@ -15,8 +15,6 @@ structural:
   role_column_name: ${role_column_name}
   content_column_name: ${content_column_name}
   assistant_column_name: ${assistant_column_name}
-  num_devices: ${devices}
-  batch_size: ${batch_size}
   pretrained_model_name: ${pretrained_model_name}
   custom_data_encoder_path: ${custom_data_encoder_path}
   reference_data_encoder_name: ${reference_data_encoder_name}
@@ -39,8 +37,6 @@ conversational:
   role_column_name: ${role_column_name}
   content_column_name: ${content_column_name}
   assistant_column_name: ${assistant_column_name}
-  num_devices: ${devices}
-  batch_size: ${batch_size}
   pretrained_model_name: ${pretrained_model_name}
   custom_data_encoder_path: ${custom_data_encoder_path}
   reference_data_encoder_name: ${reference_data_encoder_name}
