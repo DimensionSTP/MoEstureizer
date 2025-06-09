@@ -268,7 +268,7 @@ class ConversationalDataset(StructuralDataset):
             }
             preprocessed_conversation.append(preprocessed_turn)
 
-        label = preprocessed_conversation.pop()
+        label = preprocessed_conversation.pop()[self.content_column_name]
 
         prompt = self.data_encoder.apply_chat_template(
             conversation=preprocessed_conversation,
