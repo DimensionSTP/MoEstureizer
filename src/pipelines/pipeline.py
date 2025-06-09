@@ -11,6 +11,8 @@ from transformers import set_seed
 
 import wandb
 
+from tqdm import tqdm
+
 from ..utils import SetUp
 
 
@@ -123,38 +125,65 @@ def test(
     model = setup.get_model()
     data_encoder = setup.get_data_encoder()
 
+    device = "cuda"
+    model = model.to(device)
+
     try:
         results = []
-        for batch in test_loader:
-            outputs = model.generate(
-                input_ids=batch["input_ids"],
-                attention_mask=batch["attention_mask"],
-                max_new_tokens=config.max_new_tokens,
-                do_sample=False,
-                num_beams=1,
-            )
+        with torch.inference_mode():
+            for batch in tqdm(test_loader, desc=f"Test {config.dataset_name}"):
+                input_ids = batch["input_ids"].to(device)
+                attention_mask = batch["attention_mask"].to(device)
 
-            generations = data_encoder.batch_decode(
-                outputs,
-                skip_special_tokens=True,
-            )
-            labels = batch["labels"]
+                outputs = model.generate(
+                    input_ids=input_ids,
+                    attention_mask=attention_mask,
+                    max_new_tokens=config.max_new_tokens,
+                    do_sample=False,
+                    num_beams=1,
+                ).cpu()
 
-            for generation, label in zip(generations, labels):
-                results.append(
-                    {
-                        "generation": generation,
-                        "label": label,
-                    }
+                instructions = data_encoder.batch_decode(
+                    batch["input_ids"],
+                    skip_special_tokens=True,
                 )
 
-        if local_rank == 0:
-            df = pd.DataFrame(results)
-            df.to_csv(
-                config.test_output_path,
-                index=False,
-            )
+                generations = data_encoder.batch_decode(
+                    outputs[:, batch["input_ids"].shape[1] :],
+                    skip_special_tokens=True,
+                )
 
+                labels = batch["labels"]
+
+                for instruction, generation, label in zip(
+                    instructions, generations, labels
+                ):
+                    results.append(
+                        {
+                            "instruction": instruction,
+                            "generation": generation,
+                            "label": label,
+                        }
+                    )
+
+        os.makedirs(
+            config.test_output_dir,
+            exist_ok=True,
+        )
+        test_output_path = os.path.join(
+            config.test_output_dir,
+            f"{config.test_output_name}.json",
+        )
+
+        df = pd.DataFrame(results)
+        df.to_json(
+            test_output_path,
+            orient="records",
+            indent=2,
+            force_ascii=False,
+        )
+
+        if local_rank == 0:
             wandb.log({"test_results": wandb.Table(dataframe=df)})
 
             wandb.run.alert(
