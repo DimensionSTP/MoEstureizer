@@ -1,6 +1,6 @@
 structural:
   _target_: src.datasets.TestStructuralDataset
-  data_path: ${connected_dir}/data
+  data_path: ${connected_dir}/data/${test_data_dir}
   dataset_name: ${dataset_name}
   dataset_format: ${dataset_format}
   is_preprocessed: ${is_preprocessed}
@@ -19,7 +19,7 @@ structural:
 
 conversational:
   _target_: src.datasets.TestConversationalDataset
-  data_path: ${connected_dir}/data
+  data_path: ${connected_dir}/data/${test_data_dir}
   dataset_name: ${dataset_name}
   dataset_format: ${dataset_format}
   is_preprocessed: ${is_preprocessed}
