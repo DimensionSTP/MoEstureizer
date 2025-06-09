@@ -4,7 +4,7 @@ path="src/scaling"
 upload_user="HuggingFaceTB"
 model_type="SmolLM2-360M-Instruct"
 precision="bf16"
-dus_hidden_layers=36
+dus_hidden_layers=48
 num_safetensors=1
 
 python $path/dus.py \
