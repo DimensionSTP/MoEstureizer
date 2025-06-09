@@ -59,6 +59,12 @@ bash scripts/preprocess_dataset.sh
 bash scripts/train.sh
 ```
 
+* test
+
+```shell
+bash scripts/test.sh
+```
+
 ### Additional Options
 
 * SFT train(masking input)
