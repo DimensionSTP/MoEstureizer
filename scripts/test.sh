@@ -3,7 +3,6 @@
 data_type="conversational"
 dataset_name="mmlu"
 is_preprocessed=False
-upload_user="HuggingFaceTB"
 model_type="SmolLM2-360M-Instruct"
 moe_type="moesturized"
 initialize=True
@@ -19,7 +18,6 @@ python main.py mode=test \
     data_type=$data_type \
     dataset_name=$dataset_name \
     is_preprocessed=$is_preprocessed \
-    upload_user=$upload_user \
     model_type=$model_type \
     moe_type=$moe_type \
     initialize=$initialize \
