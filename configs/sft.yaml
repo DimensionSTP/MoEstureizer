@@ -118,8 +118,10 @@ resume_from_checkpoint: null
 use_validation: true
 eval_strategy: epoch
 
+test_data_dir: benchmarks/test
 max_new_tokens: 512
-test_output_path: ${connected_dir}/tests/${model_type}/${dataset_name}.csv
+test_output_dir: ${connected_dir}/tests/${model_type}
+test_output_name: ${dataset_name}
 
 dus_hidden_layers: 48
 wus_hidden_scale: 2
