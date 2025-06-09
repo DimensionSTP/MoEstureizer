@@ -12,9 +12,9 @@ left_padding=True
 max_new_tokens=512
 eval_batch_size=128
 workers_ratio=8
-use_all_workers=False
+num_gpus=$(nvidia-smi -L | wc -l)
 
-python main.py mode=test \
+torchrun --nproc_per_node=$num_gpus main.py mode=test \
     data_type=$data_type \
     dataset_name=$dataset_name \
     is_preprocessed=$is_preprocessed \
