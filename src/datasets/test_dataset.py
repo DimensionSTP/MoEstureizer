@@ -22,7 +22,7 @@ class StructuralDataset(Dataset):
         role_column_name: str,
         content_column_name: str,
         assistant_column_name: str,
-        pretrained_model_name: str,
+        model_path: str,
         custom_data_encoder_path: str,
         reference_data_encoder_name: str,
         left_padding: bool,
@@ -39,12 +39,12 @@ class StructuralDataset(Dataset):
         self.role_column_name = role_column_name
         self.content_column_name = content_column_name
         self.assistant_column_name = assistant_column_name
-        self.pretrained_model_name = pretrained_model_name
+        self.model_path = model_path
 
         if is_preprocessed:
             data_encoder_path = custom_data_encoder_path
         else:
-            data_encoder_path = self.pretrained_model_name
+            data_encoder_path = self.model_path
         self.data_encoder = AutoTokenizer.from_pretrained(
             data_encoder_path,
             use_fast=True,
@@ -176,7 +176,7 @@ class ConversationalDataset(StructuralDataset):
         role_column_name: str,
         content_column_name: str,
         assistant_column_name: str,
-        pretrained_model_name: str,
+        model_path: str,
         custom_data_encoder_path: str,
         reference_data_encoder_name: str,
         left_padding: bool,
@@ -191,12 +191,12 @@ class ConversationalDataset(StructuralDataset):
         self.role_column_name = role_column_name
         self.content_column_name = content_column_name
         self.assistant_column_name = assistant_column_name
-        self.pretrained_model_name = pretrained_model_name
+        self.model_path = model_path
 
         if is_preprocessed:
             data_encoder_path = custom_data_encoder_path
         else:
-            data_encoder_path = self.pretrained_model_name
+            data_encoder_path = self.model_path
         self.data_encoder = AutoTokenizer.from_pretrained(
             data_encoder_path,
             use_fast=True,
