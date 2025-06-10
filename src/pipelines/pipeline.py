@@ -114,7 +114,7 @@ def test(
     if local_rank == 0:
         wandb.init(
             project=config.project_name,
-            name=config.logging_name,
+            name=config.model_detail,
         )
 
     if "seed" in config:
