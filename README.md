@@ -39,6 +39,20 @@ USER_NAME={USER_NAME}
 python main.py mode=train
 ```
 
+### Test
+
+* end-to-end
+
+```shell
+python main.py mode=test
+```
+
+* end-to-end(big model)
+
+```shell
+python main.py mode=test_large
+```
+
 ### Examples of shell scipts
 
 * full preprocessing
@@ -63,6 +77,12 @@ bash scripts/train.sh
 
 ```shell
 bash scripts/test.sh
+```
+
+* test_large
+
+```shell
+bash scripts/test_large.sh
 ```
 
 ### Additional Options
