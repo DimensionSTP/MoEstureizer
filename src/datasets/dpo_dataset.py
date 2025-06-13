@@ -86,13 +86,13 @@ class StructuralDataset(Dataset):
         self.rejections = dataset["rejections"]
         self.max_length = max_length
 
-        self.response_start_template = "### Start"
+        self.response_start_template = "### Start\n"
         self.response_start_tokens = self.data_encoder(
             self.response_start_template,
             return_tensors="pt",
             add_special_tokens=False,
         )["input_ids"].squeeze(0)
-        self.response_end_template = "### End"
+        self.response_end_template = "\n### End"
         self.response_end_tokens = self.data_encoder(
             self.response_end_template,
             return_tensors="pt",
@@ -210,7 +210,7 @@ class StructuralDataset(Dataset):
         label: str,
     ) -> str:
         if self.is_sft:
-            label = f"\n{self.response_start_template}\n{label}\n{self.response_end_template}\n"
+            label = f"{self.response_start_template}{label}{self.response_end_template}"
 
         conversation = [
             {
@@ -377,13 +377,13 @@ class ConversationalDataset(StructuralDataset):
         self.rejections = dataset["rejections"]
         self.max_length = max_length
 
-        self.response_start_template = "### Start"
+        self.response_start_template = "### Start\n"
         self.response_start_tokens = self.data_encoder(
             self.response_start_template,
             return_tensors="pt",
             add_special_tokens=False,
         )["input_ids"].squeeze(0)
-        self.response_end_template = "### End"
+        self.response_end_template = "\n### End"
         self.response_end_tokens = self.data_encoder(
             self.response_end_template,
             return_tensors="pt",
@@ -494,7 +494,7 @@ class ConversationalDataset(StructuralDataset):
                 turn[self.role_column_name] == self.assistant_column_name
                 and self.is_sft
             ):
-                content = f"\n{self.response_start_template}\n{turn[self.content_column_name]}\n{self.response_end_template}\n"
+                content = f"{self.response_start_template}{turn[self.content_column_name]}{self.response_end_template}"
                 preprocessed_turn = {
                     self.role_column_name: turn[self.role_column_name],
                     self.content_column_name: content,
