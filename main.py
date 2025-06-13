@@ -46,6 +46,8 @@ def main(
         return train(config)
     elif config.mode == "test":
         return test(config)
+    elif config.mode == "test_large":
+        return test_large(config)
     else:
         raise ValueError(f"Invalid execution mode: {config.mode}")
 
