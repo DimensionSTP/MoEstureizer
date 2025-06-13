@@ -243,3 +243,102 @@ def test(
     finally:
         if world_size > 1:
             dist.destroy_process_group()
+
+
+def test_large(
+    config: DictConfig,
+) -> None:
+    wandb.init(
+        project=config.project_name,
+        name=config.model_detail,
+    )
+
+    if "seed" in config:
+        set_seed(config.seed)
+
+    setup = SetUp(config)
+
+    test_dataset = setup.get_test_dataset()
+    test_loader = DataLoader(
+        dataset=test_dataset,
+        batch_size=config.eval_batch_size,
+        shuffle=False,
+        num_workers=setup.num_workers,
+        pin_memory=True,
+    )
+
+    model = setup.get_model()
+    data_encoder = setup.get_data_encoder()
+
+    try:
+        results = []
+        with torch.inference_mode():
+            for batch in tqdm(
+                test_loader,
+                desc=f"Test {config.dataset_name}",
+            ):
+                input_ids = batch["input_ids"].to(model.device)
+                attention_mask = batch["attention_mask"].to(model.device)
+
+                outputs = model.generate(
+                    input_ids=input_ids,
+                    attention_mask=attention_mask,
+                    max_new_tokens=config.max_new_tokens,
+                    do_sample=False,
+                    num_beams=1,
+                ).cpu()
+
+                instructions = data_encoder.batch_decode(
+                    batch["input_ids"],
+                    skip_special_tokens=True,
+                )
+
+                generations = data_encoder.batch_decode(
+                    outputs[:, batch["input_ids"].shape[1] :],
+                    skip_special_tokens=True,
+                )
+
+                labels = batch["labels"]
+
+                for instruction, generation, label in zip(
+                    instructions, generations, labels
+                ):
+                    results.append(
+                        {
+                            "instruction": instruction,
+                            "generation": generation,
+                            "label": label,
+                        }
+                    )
+
+        os.makedirs(
+            config.test_output_dir,
+            exist_ok=True,
+        )
+        test_output_path = os.path.join(
+            config.test_output_dir,
+            f"{config.test_output_name}.json",
+        )
+
+        df = pd.DataFrame(results)
+        df.to_json(
+            test_output_path,
+            orient="records",
+            indent=2,
+            force_ascii=False,
+        )
+
+        wandb.log({"test_results": wandb.Table(dataframe=df)})
+
+        wandb.run.alert(
+            title="Large Model Testing Complete",
+            text=f"Testing process on {config.dataset_name} has successfully finished.",
+            level="INFO",
+        )
+    except Exception as e:
+        wandb.run.alert(
+            title="Large Model Testing Error",
+            text=f"An error occurred during testing on {config.dataset_name}: {e}",
+            level="ERROR",
+        )
+        raise e
