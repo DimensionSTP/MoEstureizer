@@ -87,14 +87,14 @@ def train(
         if local_rank == 0:
             wandb.run.alert(
                 title="Training Complete",
-                text="Training process has successfully finished.",
+                text=f"Training process on {config.dataset_name} has successfully finished.",
                 level="INFO",
             )
     except Exception as e:
         if local_rank == 0:
             wandb.run.alert(
                 title="Training Error",
-                text="An error occurred during training",
+                text=f"An error occurred during training on {config.dataset_name}: {e}",
                 level="ERROR",
             )
         raise e
@@ -145,7 +145,10 @@ def test(
 
     model.to(local_rank)
     if world_size > 1:
-        model = DDP(model, device_ids=[local_rank])
+        model = DDP(
+            model,
+            device_ids=[local_rank],
+        )
 
     try:
         results = []
@@ -196,7 +199,11 @@ def test(
 
         if world_size > 1:
             all_results = [None] * world_size
-            dist.gather_object(results, all_results if local_rank == 0 else None, dst=0)
+            dist.gather_object(
+                results,
+                all_results if local_rank == 0 else None,
+                dst=0,
+            )
             if local_rank == 0:
                 results = [item for sublist in all_results for item in sublist]
 
@@ -222,14 +229,14 @@ def test(
 
             wandb.run.alert(
                 title="Testing Complete",
-                text="Testing process has successfully finished.",
+                text=f"Testing process on {config.dataset_name} has successfully finished.",
                 level="INFO",
             )
     except Exception as e:
         if local_rank == 0:
             wandb.run.alert(
                 title="Testing Error",
-                text=f"An error occurred during testing: {e}",
+                text=f"An error occurred during testing on {config.dataset_name}: {e}",
                 level="ERROR",
             )
         raise e
