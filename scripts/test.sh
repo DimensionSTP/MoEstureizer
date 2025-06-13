@@ -12,6 +12,7 @@ left_padding=True
 max_new_tokens=512
 eval_batch_size=128
 workers_ratio=8
+use_all_workers=False
 num_gpus=$(nvidia-smi -L | wc -l)
 
 torchrun --nproc_per_node=$num_gpus main.py mode=test \
