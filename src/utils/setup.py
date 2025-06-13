@@ -74,8 +74,12 @@ class SetUp:
         quantization_config = None
         device_map = None
         if self.config.is_quantized:
-            device_map = {"": "cuda:" + str(int(os.environ.get("LOCAL_RANK") or 0))}
             quantization_config = BitsAndBytesConfig(**self.config.quantization_config)
+            if device_map is None:
+                device_map = {"": "cuda:" + str(int(os.environ.get("LOCAL_RANK") or 0))}
+
+        if getattr(self.config, "mode", "train") == "test_large":
+            device_map = "auto"
 
         if self.config.moe_type == "moesturized":
             model = MoEsturizedLlamaForCausalLM.from_pretrained(
