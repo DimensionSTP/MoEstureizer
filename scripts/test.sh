@@ -25,6 +25,7 @@ torchrun --nproc_per_node=$num_gpus main.py mode=test \
     num_experts=$num_experts \
     num_experts_per_tok=$num_experts_per_tok \
     left_padding=$left_padding \
+    max_length=$max_length \
     max_new_tokens=$max_new_tokens \
     eval_batch_size=$eval_batch_size \
     workers_ratio=$workers_ratio \
