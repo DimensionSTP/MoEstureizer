@@ -19,5 +19,6 @@ torch==2.6.0
 tqdm==4.67.1
 transformers==4.51.3
 triton==3.2.0
-trl==0.16.1
+trl==0.18.2
+vllm==0.8.5
 wandb==0.18.3
