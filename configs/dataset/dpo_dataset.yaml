@@ -1,14 +1,11 @@
 structural:
   _target_: src.datasets.DPOStructuralDataset
   data_path: ${connected_dir}/data
-  split: ${split.train}
   split_ratio: ${split_ratio}
   is_strict_split: ${is_strict_split}
   seed: ${seed}
   dataset_name: ${dataset_name}
   dataset_format: ${dataset_format}
-  is_sft: ${is_sft}
-  is_preprocessed: ${is_preprocessed}
   instruction_column_name: ${instruction_column_name}
   data_column_name: ${data_column_name}
   chosen_column_name: ${chosen_column_name}
@@ -16,32 +13,14 @@ structural:
   role_column_name: ${role_column_name}
   content_column_name: ${content_column_name}
   assistant_column_name: ${assistant_column_name}
-  pretrained_model_name: ${pretrained_model_name}
-  custom_data_encoder_path: ${custom_data_encoder_path}
-  reference_data_encoder_name: ${reference_data_encoder_name}
-  left_padding: ${left_padding}
-  is_enable_thinking: ${is_enable_thinking}
-  max_length: ${max_length}
 
 conversational:
   _target_: src.datasets.DPOConversationalDataset
   data_path: ${connected_dir}/data
-  split: ${split.train}
   split_ratio: ${split_ratio}
   is_strict_split: ${is_strict_split}
   seed: ${seed}
   dataset_name: ${dataset_name}
   dataset_format: ${dataset_format}
-  is_sft: ${is_sft}
-  is_preprocessed: ${is_preprocessed}
   chosen_column_name: ${chosen_column_name}
   rejected_column_name: ${rejected_column_name}
-  role_column_name: ${role_column_name}
-  content_column_name: ${content_column_name}
-  assistant_column_name: ${assistant_column_name}
-  pretrained_model_name: ${pretrained_model_name}
-  custom_data_encoder_path: ${custom_data_encoder_path}
-  reference_data_encoder_name: ${reference_data_encoder_name}
-  left_padding: ${left_padding}
-  is_enable_thinking: ${is_enable_thinking}
-  max_length: ${max_length}
