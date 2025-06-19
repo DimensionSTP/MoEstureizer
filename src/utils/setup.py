@@ -62,6 +62,12 @@ class SetUp:
         )
         return val_dataset
 
+    def get_dataset(self) -> object:
+        dataset: object = instantiate(
+            self.config.dataset[self.data_type],
+        )
+        return dataset()
+
     def get_test_dataset(self) -> Dataset:
         test_dataset: Dataset = instantiate(
             self.config.test_dataset[self.data_type],
