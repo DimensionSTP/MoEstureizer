@@ -8,6 +8,7 @@ initialize=False
 base_path="/data/MoEstureizer"
 model_detail="SmolLM2-360M-Instruct-${moe_type}-experts_8-tok_3"
 pretrained_model_name="${base_path}/${model_detail}"
+revision="main"
 left_padding=True
 max_length=2048
 max_new_tokens=256
@@ -24,6 +25,7 @@ torchrun --nproc_per_node=$num_gpus main.py mode=test \
     initialize=$initialize \
     model_detail=$model_detail \
     pretrained_model_name=$pretrained_model_name \
+    revision=$revision \
     left_padding=$left_padding \
     max_length=$max_length \
     max_new_tokens=$max_new_tokens \

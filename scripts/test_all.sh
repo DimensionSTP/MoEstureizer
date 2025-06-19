@@ -32,6 +32,7 @@ model_details=(
     "SmolLM2-1.7B-Instruct-DUS-36layers-${moe_type}-experts_8-tok_3"
 )
 
+revision="main"
 left_padding=True
 max_length=2048
 max_new_tokens=256
@@ -56,6 +57,7 @@ do
             initialize=$initialize \
             model_detail=$model_detail \
             pretrained_model_name=$pretrained_model_name \
+            revision=$revision \
             left_padding=$left_padding \
             max_length=$max_length \
             max_new_tokens=$max_new_tokens \
