@@ -195,6 +195,7 @@ class SetUp:
         data_encoder = AutoTokenizer.from_pretrained(
             data_encoder_path,
             use_fast=True,
+            revision=self.revision,
         )
 
         if data_encoder.chat_template is None:
