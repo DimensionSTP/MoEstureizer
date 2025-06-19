@@ -42,6 +42,7 @@ upload_user: HuggingFaceTB
 model_type: SmolLM2-360M-Instruct
 pretrained_model_name: ${upload_user}/${model_type}
 custom_data_encoder_path: ${connected_dir}/merged/data_encoders/${pretrained_model_name}
+revision: main
 reference_data_encoder_name: HuggingFaceTB/SmolLM2-360M-Instruct
 left_padding: false
 is_enable_thinking: false
