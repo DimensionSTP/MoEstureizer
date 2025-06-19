@@ -80,6 +80,8 @@ def train(
         **trainer_config,
     )
 
+    trainer.tokenizer = data_encoder
+
     try:
         trainer.train(
             resume_from_checkpoint=(
