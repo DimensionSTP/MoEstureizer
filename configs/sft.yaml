@@ -11,6 +11,8 @@ package_name: MoEstureizer
 project_dir: ${oc.env:PROJECT_DIR}/${package_name}
 connected_dir: ${oc.env:CONNECTED_DIR}/${package_name}
 
+fine_tune_method: sft
+
 seed: 2025
 
 data_type: structural
