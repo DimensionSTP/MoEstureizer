@@ -44,8 +44,12 @@ def train(
 
     setup = SetUp(config)
 
-    train_dataset = setup.get_train_dataset()
-    val_dataset = setup.get_val_dataset() if config.use_validation else None
+    if config.fine_tune_method == "sft":
+        train_dataset = setup.get_train_dataset()
+        val_dataset = setup.get_val_dataset() if config.use_validation else None
+    else:
+        train_dataset = setup.get_dataset()["train"]
+        val_dataset = setup.get_dataset()["val"]
 
     model = setup.get_model()
     data_encoder = setup.get_data_encoder()
