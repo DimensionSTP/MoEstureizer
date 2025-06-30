@@ -50,6 +50,7 @@ left_padding: false
 is_enable_thinking: false
 merged_model_path: ${connected_dir}/merged/models/${pretrained_model_name}
 max_length: 4096
+response_start_template: <|im_start|>${assistant_column_name}
 
 moe_type: moesturized
 initialize: true
