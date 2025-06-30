@@ -35,6 +35,7 @@ class StructuralDataset(Dataset):
         left_padding: bool,
         is_enable_thinking: bool,
         max_length: int,
+        response_start_template: str,
     ) -> None:
         self.data_path = data_path
         self.split = split
@@ -85,15 +86,13 @@ class StructuralDataset(Dataset):
         self.labels = dataset["labels"]
         self.max_length = max_length
 
-        self.response_start_template = "### Start\n"
         self.response_start_tokens = self.data_encoder(
-            self.response_start_template,
+            response_start_template,
             return_tensors="pt",
             add_special_tokens=False,
         )["input_ids"].squeeze(0)
-        self.response_end_template = "\n### End"
         self.response_end_tokens = self.data_encoder(
-            self.response_end_template,
+            self.data_encoder.eos_token,
             return_tensors="pt",
             add_special_tokens=False,
         )["input_ids"].squeeze(0)
@@ -160,9 +159,6 @@ class StructuralDataset(Dataset):
         data: str,
         label: str,
     ) -> str:
-        if self.is_sft:
-            label = f"{self.response_start_template}{label}{self.response_end_template}"
-
         conversation = [
             {
                 self.role_column_name: "system",
@@ -273,7 +269,6 @@ class ConversationalDataset(StructuralDataset):
         conversation_column_name: str,
         role_column_name: str,
         content_column_name: str,
-        assistant_column_name: str,
         pretrained_model_name: str,
         custom_data_encoder_path: str,
         revision: str,
@@ -281,6 +276,7 @@ class ConversationalDataset(StructuralDataset):
         left_padding: bool,
         is_enable_thinking: bool,
         max_length: int,
+        response_start_template: str,
     ) -> None:
         self.data_path = data_path
         self.split = split
@@ -294,7 +290,6 @@ class ConversationalDataset(StructuralDataset):
         self.conversation_column_name = conversation_column_name
         self.role_column_name = role_column_name
         self.content_column_name = content_column_name
-        self.assistant_column_name = assistant_column_name
         self.pretrained_model_name = pretrained_model_name
 
         if is_preprocessed:
@@ -327,15 +322,13 @@ class ConversationalDataset(StructuralDataset):
         self.conversations = dataset["conversations"]
         self.max_length = max_length
 
-        self.response_start_template = "### Start\n"
         self.response_start_tokens = self.data_encoder(
-            self.response_start_template,
+            response_start_template,
             return_tensors="pt",
             add_special_tokens=False,
         )["input_ids"].squeeze(0)
-        self.response_end_template = "\n### End"
         self.response_end_tokens = self.data_encoder(
-            self.response_end_template,
+            self.data_encoder.eos_token,
             return_tensors="pt",
             add_special_tokens=False,
         )["input_ids"].squeeze(0)
@@ -394,22 +387,11 @@ class ConversationalDataset(StructuralDataset):
     ) -> str:
         preprocessed_conversation = []
         for turn in conversation:
-            if (
-                turn[self.role_column_name] == self.assistant_column_name
-                and self.is_sft
-            ):
-                content = f"{self.response_start_template}{turn[self.content_column_name]}{self.response_end_template}"
-                preprocessed_turn = {
-                    self.role_column_name: turn[self.role_column_name],
-                    self.content_column_name: content,
-                }
-                preprocessed_conversation.append(preprocessed_turn)
-            else:
-                preprocessed_turn = {
-                    self.role_column_name: turn[self.role_column_name],
-                    self.content_column_name: turn[self.content_column_name],
-                }
-                preprocessed_conversation.append(preprocessed_turn)
+            preprocessed_turn = {
+                self.role_column_name: turn[self.role_column_name],
+                self.content_column_name: turn[self.content_column_name],
+            }
+            preprocessed_conversation.append(preprocessed_turn)
 
         prompt = self.data_encoder.apply_chat_template(
             conversation=preprocessed_conversation,
