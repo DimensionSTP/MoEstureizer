@@ -22,6 +22,7 @@ structural:
   left_padding: ${left_padding}
   is_enable_thinking: ${is_enable_thinking}
   max_length: ${max_length}
+  response_start_template: ${response_start_template}
 
 conversational:
   _target_: src.datasets.SFTConversationalDataset
@@ -37,7 +38,6 @@ conversational:
   conversation_column_name: ${conversation_column_name}
   role_column_name: ${role_column_name}
   content_column_name: ${content_column_name}
-  assistant_column_name: ${assistant_column_name}
   pretrained_model_name: ${pretrained_model_name}
   custom_data_encoder_path: ${custom_data_encoder_path}
   revision: ${revision}
@@ -45,3 +45,4 @@ conversational:
   left_padding: ${left_padding}
   is_enable_thinking: ${is_enable_thinking}
   max_length: ${max_length}
+  response_start_template: ${response_start_template}
