@@ -202,6 +202,7 @@ def test(
                     )
 
         if world_size > 1:
+            dist.barrier()
             all_results = [None] * world_size
             dist.gather_object(
                 results,
