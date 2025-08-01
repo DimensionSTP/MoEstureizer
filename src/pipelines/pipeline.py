@@ -174,8 +174,8 @@ def test(
                     input_ids=input_ids,
                     attention_mask=attention_mask,
                     max_new_tokens=config.max_new_tokens,
-                    do_sample=False,
-                    num_beams=1,
+                    do_sample=config.do_sample,
+                    **config.generation_config,
                 ).cpu()
 
                 instructions = data_encoder.batch_decode(
@@ -289,8 +289,8 @@ def test_large(
                     input_ids=input_ids,
                     attention_mask=attention_mask,
                     max_new_tokens=config.max_new_tokens,
-                    do_sample=False,
-                    num_beams=1,
+                    do_sample=config.do_sample,
+                    **config.generation_config,
                 ).cpu()
 
                 instructions = data_encoder.batch_decode(
