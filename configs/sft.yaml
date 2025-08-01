@@ -122,8 +122,14 @@ resume_from_checkpoint: null
 use_validation: true
 eval_strategy: epoch
 
-test_data_dir: benchmarks/test
 max_new_tokens: 512
+do_sample: true
+generation_config:
+  temperature: 0.6
+  top_p: 0.95
+  top_k: 20
+
+test_data_dir: benchmarks/test
 test_output_dir: ${connected_dir}/tests/${model_detail}
 test_output_name: ${dataset_name}
 
