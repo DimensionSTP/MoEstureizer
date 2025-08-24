@@ -13,6 +13,7 @@ from torch.nn import ModuleList
 from transformers import AutoModelForCausalLM
 
 from transformers.cache_utils import DynamicCache
+from transformers.masking_utils import create_causal_mask
 from transformers.processing_utils import Unpack
 from transformers.modeling_outputs import (
     MoeModelOutputWithPast,
@@ -304,12 +305,13 @@ class MoEsturizedLlamaModel(LlamaModel):
         if position_ids is None:
             position_ids = cache_position.unsqueeze(0)
 
-        causal_mask = self._update_causal_mask(
-            attention_mask,
-            inputs_embeds,
-            cache_position,
-            past_key_values,
-            output_attentions,
+        causal_mask = create_causal_mask(
+            config=self.config,
+            input_embeds=inputs_embeds,
+            attention_mask=attention_mask,
+            cache_position=cache_position,
+            past_key_values=past_key_values,
+            position_ids=position_ids,
         )
 
         hidden_states = inputs_embeds
