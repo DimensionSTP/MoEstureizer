@@ -28,7 +28,7 @@ from transformers.models.llama.modeling_llama import (
     LlamaDecoderLayer,
     LlamaModel,
     LlamaForCausalLM,
-    KwargsForCausalLM,
+    TransformersKwargs,
 )
 
 from transformers.utils import can_return_tuple, logging
@@ -511,7 +511,7 @@ class MoEsturizedLlamaForCausalLM(LlamaForCausalLM, GenerationMixin):
         output_router_logits: Optional[bool] = None,
         cache_position: Optional[torch.LongTensor] = None,
         logits_to_keep: Union[int, torch.Tensor] = 0,
-        **kwargs: Unpack[KwargsForCausalLM],
+        **kwargs: Unpack[TransformersKwargs],
     ) -> MoeCausalLMOutputWithPast:
         output_attentions = (
             output_attentions
