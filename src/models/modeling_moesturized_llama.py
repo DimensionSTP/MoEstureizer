@@ -91,28 +91,40 @@ class LlamaSparseMoeBlock(nn.Module):
             device=hidden_states.device,
         )
 
-        expert_mask = F.one_hot(
-            selected_experts,
-            num_classes=self.num_experts,
-        ).permute(2, 1, 0)
-
         for expert_idx in range(self.num_experts):
             expert_layer = self.experts[expert_idx]
-            idx, top_x = torch.where(expert_mask[expert_idx])
 
-            current_state = hidden_states[None, top_x].reshape(
-                -1,
-                hidden_dim,
+            matches = selected_experts == expert_idx
+            pos = matches.nonzero(as_tuple=False)
+
+            if pos.numel() == 0:
+                continue
+
+            top_x = pos[:, 0].contiguous()
+            idx = pos[:, 1].contiguous()
+
+            current_state = hidden_states.index_select(
+                dim=0,
+                index=top_x,
             )
-            current_hidden_states = (
-                expert_layer(current_state) * routing_weights[top_x, idx, None]
+            all_weights = routing_weights.index_select(
+                dim=0,
+                index=top_x,
             )
+            selected_weights = all_weights.gather(
+                dim=1,
+                index=idx.unsqueeze(1),
+            ).squeeze(1)
+            current_hidden_states = expert_layer(
+                current_state
+            ) * selected_weights.unsqueeze(1).to(current_state.dtype)
 
             final_hidden_states.index_add_(
-                0,
-                top_x,
-                current_hidden_states.to(hidden_states.dtype),
+                dim=0,
+                index=top_x,
+                source=current_hidden_states.to(hidden_states.dtype),
             )
+
         final_hidden_states = final_hidden_states.reshape(
             batch_size,
             sequence_length,
