@@ -1,10 +1,10 @@
-# LLM model scaling pipeline
+# LLM model scaling(MoE, depth up) pipeline
 
-## For (s)LLM model scaling
+## For (s)LLM model scaling(MoE, depth up)
 
 ### Dataset
 
-Tulu sampling dataset(preprocessed as instruction, input, and response)
+Tulu sampling and train split of opened benchmarks dataset(preprocessed as instruction, input, and response)
 
 ### Quick setup
 
