@@ -255,7 +255,7 @@ tqdm==4.67.1
 traitlets @ file:///home/conda/feedstock_root/build_artifacts/traitlets_1733367359838/work
 transformers==4.55.4
 triton==3.3.1
-trl==0.22.1
+trl==0.18.2
 typer==0.16.1
 typing-inspect==0.9.0
 typing-inspection==0.4.1
